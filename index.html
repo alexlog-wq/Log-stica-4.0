@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LOGÍSTICA 4.0</title>
+<style>
+:root{--bg:#050f24;--card:#0b1d3d;--card2:#0f2750;--ink:#e6eefc;--mut:#8fa6c9;--pri:#22d3ee;--pri2:#0ea5c6;--acc:#f59e0b;--ok:#34d399;--okbg:rgba(52,211,153,.12);--no:#f87171;--nobg:rgba(248,113,113,.12);--line:#1f3d70}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(34,211,238,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.05) 1px,transparent 1px);background-size:36px 36px;background-attachment:fixed;min-height:100vh}
+header{background:linear-gradient(135deg,#071a3a 0%,#0a2a5e 60%,#0b3a73 100%);border-bottom:2px solid var(--pri);padding:34px 16px 26px;position:relative;overflow:hidden}
+header div,main{max-width:760px;margin:0 auto;position:relative}
+h1{margin:0 0 6px;font-size:2.4rem;line-height:1.1;letter-spacing:.06em;font-weight:800;color:#fff;text-shadow:0 0 22px rgba(34,211,238,.45)}
+header p{margin:0;color:var(--mut)}
+.rota{display:block;width:100%;height:34px;margin-top:18px}
+main{padding:22px 16px 60px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+label.n{display:block;font-weight:600;margin-bottom:6px}
+input[type=text]{width:100%;padding:12px;font-size:1rem;color:var(--ink);background:#06152f;border:1px solid var(--line);border-radius:8px}
+input[type=text]::placeholder{color:#58729c}
+input[type=text]:focus,button:focus-visible,.op:focus-within{outline:3px solid rgba(34,211,238,.6);outline-offset:1px}
+.tema{font-size:.85rem;color:var(--pri);font-weight:700;margin-bottom:4px;padding:0 6px;letter-spacing:.03em}
+.q h2{font-size:1.05rem;margin:0 0 12px;line-height:1.45;font-weight:600}
+.op{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;cursor:pointer;background:var(--card2)}
+.op:hover{border-color:var(--pri);background:#13306098}
+.op:has(input:checked){border-color:var(--pri);background:rgba(34,211,238,.12)}
+.op input{margin-top:5px;accent-color:var(--pri)}
+.op b{min-width:1.2em;color:var(--pri)}
+.q.ok{border-left:6px solid var(--ok)}.q.no{border-left:6px solid var(--no)}
+.op.certa{background:var(--okbg);border-color:var(--ok)}
+.op.errada{background:var(--nobg);border-color:var(--no)}
+.sel{font-size:.9rem;font-weight:600;margin-top:6px}
+.sel.ok{color:var(--ok)}.sel.no{color:var(--no)}
+button{font:inherit;font-weight:700;border:0;border-radius:8px;padding:13px 22px;cursor:pointer;background:var(--pri);color:#04162f}
+button:hover{background:#67e8f9}
+button.sec{background:transparent;color:var(--pri);border:1px solid var(--pri)}
+button.sec:hover{background:rgba(34,211,238,.12)}
+button.wa{background:#25d366;color:#04230f}button.wa:hover{background:#4ee08a}
+.bar{height:8px;background:#0a1a38;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pri2),var(--pri),var(--acc));transition:width .25s}
+#prog{font-size:.9rem;color:var(--mut)}
+.nota{font-size:2.6rem;font-weight:800;color:var(--pri);line-height:1.1;text-shadow:0 0 18px rgba(34,211,238,.4)}
+.acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.erro{color:var(--no);font-weight:600;margin:8px 0 0}
+.hide{display:none}
+#dica a{color:var(--pri)}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<header><div>
+<h1>LOGÍSTICA 4.0</h1>
+<p>Curso Técnico em Logística · 30 questões · uma resposta correta por questão</p>
+<svg class="rota" viewBox="0 0 700 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 17H120L150 6H300L330 28H480L510 17H700" fill="none" stroke="#22d3ee" stroke-width="2" stroke-dasharray="6 6" opacity=".7"/><g fill="#050f24" stroke="#22d3ee" stroke-width="2"><circle cx="120" cy="17" r="5"/><circle cx="300" cy="6" r="5"/><circle cx="480" cy="28" r="5"/></g><circle cx="690" cy="17" r="6" fill="#f59e0b"/></svg>
+</div></header>
+<main>
+<section class="box" id="inicio">
+<label class="n" for="nome">Seu nome completo</label>
+<input type="text" id="nome" autocomplete="name" placeholder="Digite seu nome">
+<p class="erro hide" id="erroNome">Digite seu nome para enviar o questionário.</p>
+<div id="prog" style="margin-top:14px">Respondidas: 0 de 30</div>
+<div class="bar"><i id="barra"></i></div>
+</section>
+<form id="quiz" onsubmit="return false"></form>
+<div class="box" id="enviar">
+<button id="btnEnviar" type="button">Enviar respostas</button>
+<p class="erro hide" id="erroEnvio"></p>
+</div>
+<section class="box hide" id="resultado" aria-live="polite">
+<div class="nota" id="nota"></div>
+<p id="resumo"></p>
+<div class="acoes">
+<button class="wa" id="btnWpp" type="button">Gerar PDF e enviar ao professor (WhatsApp)</button>
+<button class="sec" id="btnPdf" type="button">Baixar PDF</button>
+<button class="sec" id="btnRefazer" type="button">Refazer o questionário</button>
+</div>
+<p class="hide" id="dica" style="margin:14px 0 0;color:var(--mut)"></p>
+</section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const WHATSAPP="5587988342690";
+// [tema, enunciado, [A,B,C,D], índice da correta 0-3]
+const Q=[
+["Indústria 4.0","Qual alternativa descreve melhor a Indústria 4.0?",["Automação baseada em linhas de montagem mecanizadas e uso intensivo de energia elétrica","Integração entre sistemas ciberfísicos, conectividade e análise de dados na produção","Produção em massa padronizada, apoiada em esteiras e na divisão do trabalho","Digitalização de documentos administrativos sem alterar o processo produtivo"],1],
+["Inteligência artificial","A inteligência artificial (IA) pode ser definida como:",["Software que executa apenas instruções fixas, sem capacidade de adaptação","Conjunto de sensores que medem grandezas físicas e as enviam a um servidor","Tecnologia que armazena grandes volumes de dados em servidores remotos","Sistemas capazes de aprender com dados para decidir ou fazer previsões"],3],
+["Inteligência artificial","Qual é um exemplo de uso de IA na logística?",["Modelo que prevê a demanda a partir do histórico de vendas","Leitor de código de barras que identifica o produto na expedição","Sistema de rastreamento que mostra a posição do caminhão no mapa","Esteira transportadora que leva os volumes até a doca de embarque"],0],
+["Inteligência artificial","O que é machine learning (aprendizado de máquina)?",["Programação em que o desenvolvedor define antecipadamente todas as regras de decisão","Robô físico que aprende movimentos por meio de peças mecânicas ajustáveis","Técnica em que o algoritmo identifica padrões nos dados e melhora com a experiência","Rotina de manutenção que atualiza o sistema operacional dos equipamentos"],2],
+["Inteligência artificial","Como a IA contribui para a roteirização de entregas?",["Define rotas fixas e repetidas todos os dias, independentemente das condições de tráfego","Recalcula rotas considerando trânsito, janelas de entrega e custo de combustível","Registra manualmente a quilometragem percorrida por cada motorista","Faz com que todos os veículos sigam o mesmo trajeto para padronizar a frota"],1],
+["Internet das Coisas","A Internet das Coisas (IoT) é:",["A conexão de objetos físicos à internet, por sensores, para trocar dados","Uma rede interna que liga apenas computadores e impressoras de um escritório","Uma plataforma de venda online que integra estoque e meios de pagamento","Um conjunto de softwares de gestão que funcionam sem conexão com a rede"],0],
+["Internet das Coisas","Qual é a função de um sensor IoT em uma carga refrigerada?",["Calcular automaticamente a rota mais econômica conforme o peso da carga","Registrar a quantidade de volumes carregados em cada entrega","Emitir o documento fiscal da mercadoria durante o transporte","Monitorar a temperatura durante o transporte e alertar sobre desvios"],3],
+["Internet das Coisas","A tecnologia RFID é usada para:",["Ler código de barras por varredura a laser, exigindo linha de visão com a etiqueta","Criptografar os dados trafegados entre o armazém e o servidor","Identificar itens por radiofrequência, sem necessidade de contato visual","Localizar veículos por meio de um sistema de posicionamento por satélite"],2],
+["Internet das Coisas","A telemetria veicular consiste em:",["Envio remoto de dados do veículo, como velocidade, posição e consumo","Inspeção periódica obrigatória realizada em oficinas credenciadas","Registro manual das ocorrências feito pelo motorista ao fim da viagem","Planejamento prévio das paradas e dos horários de descanso da jornada"],0],
+["Big Data","Quais são os três Vs originais que definem o Big Data?",["Valor, Veracidade e Variação","Volume, Velocidade e Variedade","Visibilidade, Validade e Volume","Velocidade, Valor e Veracidade"],1],
+["Big Data","Qual é um uso do Big Data na logística?",["Organizar fisicamente o estoque por meio do endereçamento de prateleiras","Automatizar o transporte interno de cargas com veículos autônomos","Cruzar grandes volumes de dados para achar padrões e apoiar decisões","Proteger o sistema contra acessos indevidos e ataques externos"],2],
+["Big Data","Qual alternativa traz um exemplo de dado estruturado?",["Imagens de câmeras de segurança do centro de distribuição","Mensagens de e-mail trocadas entre a empresa e os clientes","Gravações de áudio das ligações do atendimento ao cliente","Planilha de pedidos com campos fixos de cliente, item e data"],3],
+["Big Data","A análise preditiva consiste em:",["Resumir os resultados do mês anterior em relatórios e gráficos","Estimar eventos futuros a partir de dados históricos e modelos","Identificar a causa de um problema que já ocorreu na operação","Monitorar em tempo real a posição dos veículos da frota"],1],
+["Realidade virtual","A realidade virtual (RV) caracteriza-se por:",["Um ambiente totalmente simulado, em que o usuário é imerso por óculos","Imagens digitais projetadas sobre o ambiente real, vistas em tela ou óculos","Uma conexão remota entre máquinas para troca automática de dados","A reprodução de vídeos em alta resolução em telas de grande formato"],0],
+["Realidade virtual","Qual é uma aplicação da RV na logística?",["Conferência automática do estoque por leitura de etiquetas de radiofrequência","Comunicação entre o veículo e um servidor para transmitir dados de consumo","Treinamento de operadores de empilhadeira em ambiente simulado e seguro","Previsão de falhas em equipamentos com base em dados de sensores"],2],
+["Realidade virtual","Como a realidade aumentada (RA) pode apoiar o picking (separação de pedidos)?",["Simulando um armazém completo para treinar novos operadores","Lendo etiquetas por radiofrequência em toda a área de estocagem","Levando os itens até a área de expedição por meio de robôs","Exibindo o local e o item a coletar sobre a visão real do operador"],3],
+["Realidade virtual","Qual é a diferença entre RV e RA?",["Na RV o ambiente é totalmente virtual; na RA o digital se soma ao real","Na RV o digital se soma ao mundo real; na RA o ambiente é totalmente virtual","A RV exige conexão com a internet; a RA funciona sempre sem nenhuma conexão","A RV é usada apenas em jogos; a RA é usada apenas em processos industriais"],0],
+["Computação em nuvem","A computação em nuvem é:",["A instalação de servidores próprios na empresa para guardar todos os dados","Uma rede de sensores distribuídos que coletam informações de máquinas e veículos","A oferta de recursos de TI pela internet, como armazenamento e processamento","Uma técnica de análise de grandes volumes de dados para apoiar decisões"],2],
+["Computação em nuvem","Qual é uma vantagem da nuvem para sistemas como WMS e TMS?",["Dispensar totalmente a necessidade de conexão com a internet","Acessar os sistemas de qualquer lugar e ajustar a capacidade de uso","Manter os dados armazenados somente em equipamentos locais da empresa","Eliminar qualquer risco de falha ou de indisponibilidade dos serviços"],1],
+["Computação em nuvem","No modelo de serviços em nuvem, o SaaS (Software as a Service) corresponde a:",["Infraestrutura de servidores e redes alugada para a empresa montar seu próprio ambiente","Plataforma em que desenvolvedores criam e executam aplicações sem gerenciar servidores","Programa instalado em cada computador, com licença permanente de uso local","Software oferecido pela internet, geralmente por assinatura, sem instalação local"],3],
+["Computação em nuvem","A nuvem híbrida é:",["A nuvem usada por uma única empresa, em infraestrutura exclusiva dela","A nuvem compartilhada entre várias empresas e oferecida por um provedor","A combinação de nuvem pública e privada ou infraestrutura local","A nuvem que utiliza apenas dispositivos móveis para processar os dados"],2],
+["Robótica e automação","A automação de processos consiste em:",["Usar tecnologia para executar tarefas com pouca intervenção humana","Substituir de imediato todos os cargos operacionais por robôs","Adotar máquinas que dependem de operação manual contínua e direta","Reorganizar o layout do armazém sem o uso de equipamentos tecnológicos"],0],
+["Robótica e automação","O que é um AGV em um armazém?",["Aeronave não tripulada usada para entregas de pequenas encomendas","Veículo guiado automaticamente que movimenta cargas em armazéns","Sistema de gestão que organiza o recebimento e a expedição de mercadorias","Empilhadeira conduzida por operador, com apoio de sensores de proximidade"],1],
+["Robótica e automação","Os robôs colaborativos (cobots) são:",["Robôs industriais de grande porte que operam isolados por grades de proteção","Programas de software que automatizam rotinas administrativas repetitivas","Veículos autônomos de grande porte usados no transporte rodoviário","Robôs desenvolvidos para trabalhar com segurança ao lado das pessoas"],3],
+["Robótica e automação","Qual é um benefício da automação em um centro de distribuição?",["Maior produtividade e menos erros em atividades repetitivas","Menor dependência de sistemas de informação para controlar o estoque","Redução do custo inicial, pois dispensa investimento em equipamentos e software","Maior necessidade de mão de obra em atividades repetitivas de movimentação"],0],
+["Cibersegurança","A cibersegurança é:",["Um seguro que cobre roubo e avarias da carga durante o transporte","Um conjunto de rotinas de vigilância e controle de acesso físico ao pátio","Práticas e tecnologias para proteger sistemas e dados de ataques","Um conjunto de normas de trânsito e segurança viária aplicadas à frota"],2],
+["Cibersegurança","O que é phishing?",["Programa malicioso que se replica sozinho e se espalha entre os computadores da rede","Barreira que filtra o tráfego de rede entre a empresa e a internet","Ataque que sobrecarrega um servidor com acessos até tirá-lo do ar","Fraude por mensagem falsa que induz a vítima a informar dados ou clicar em links"],3],
+["Cibersegurança","O ransomware é:",["Programa que registra tudo o que o usuário digita para roubar senhas","Malware que bloqueia ou criptografa dados e exige resgate em dinheiro","Ataque que sobrecarrega o servidor com milhares de acessos simultâneos","Vírus que se anexa a arquivos e se espalha quando eles são compartilhados"],1],
+["Cibersegurança","Qual é uma boa prática de segurança digital?",["Ativar a autenticação em dois fatores e usar senhas distintas por sistema","Usar a mesma senha forte em todos os sistemas para não correr o risco de esquecê-la","Adiar as atualizações dos sistemas para evitar interrupções durante a operação","Compartilhar o acesso com os colegas de equipe para agilizar as tarefas do dia"],0],
+["Logística 4.0","A Logística 4.0 pode ser descrita como:",["O uso de tecnologia apenas no transporte, mantendo armazéns e estoques manuais","A reorganização de processos com foco exclusivo na redução do custo de frete","A integração de tecnologias como IoT, IA e big data para dar visibilidade e agilidade","A substituição de todos os profissionais de logística por sistemas automatizados"],2]
+];
+const L=["A","B","C","D"], resp=new Array(Q.length).fill(null);
+const quiz=document.getElementById("quiz");
+quiz.innerHTML=Q.map((q,i)=>`<fieldset class="box q" id="q${i}" style="margin:0 0 16px"><legend class="tema">${q[0]}</legend><h2>${i+1}. ${q[1]}</h2>${q[2].map((t,j)=>`<label class="op"><input type="radio" name="q${i}" value="${j}"><b>${L[j]})</b><span>${t}</span></label>`).join("")}<div class="sel hide"></div></fieldset>`).join("");
+const total=Q.length;
+function prog(){const n=resp.filter(r=>r!==null).length;document.getElementById("prog").textContent=`Respondidas: ${n} de ${total}`;document.getElementById("barra").style.width=(n/total*100)+"%"}
+quiz.addEventListener("change",e=>{const m=e.target.name.match(/^q(\d+)$/);if(m){resp[+m[1]]=+e.target.value;prog()}});
+let enviado=false,acertos=0;
+document.getElementById("btnEnviar").onclick=()=>{
+ if(enviado)return;
+ const nome=document.getElementById("nome").value.trim();
+ const en=document.getElementById("erroNome"),ee=document.getElementById("erroEnvio");
+ en.classList.add("hide");ee.classList.add("hide");
+ if(!nome){en.classList.remove("hide");document.getElementById("nome").focus();return}
+ const falta=resp.map((r,i)=>r===null?i+1:null).filter(Boolean);
+ if(falta.length){ee.textContent="Faltam as questões: "+falta.join(", ")+".";ee.classList.remove("hide");document.getElementById("q"+(falta[0]-1)).scrollIntoView({behavior:"smooth",block:"center"});return}
+ enviado=true;acertos=0;
+ Q.forEach((q,i)=>{
+  const box=document.getElementById("q"+i),ok=resp[i]===q[3];
+  if(ok)acertos++;
+  box.classList.add(ok?"ok":"no");
+  box.querySelectorAll(".op").forEach((op,j)=>{
+   if(j===q[3])op.classList.add("certa");
+   else if(j===resp[i])op.classList.add("errada");
+   op.querySelector("input").disabled=true;
+  });
+  const s=box.querySelector(".sel");s.classList.remove("hide");s.classList.add(ok?"ok":"no");
+  s.textContent=ok?"Você acertou.":`Você errou. Sua resposta: ${L[resp[i]]}. Resposta correta: ${L[q[3]]}.`;
+ });
+ document.getElementById("nome").disabled=true;
+ document.getElementById("enviar").classList.add("hide");
+ const r=document.getElementById("resultado");r.classList.remove("hide");
+ document.getElementById("nota").textContent=`${acertos} de ${total} (${Math.round(acertos/total*100)}%)`;
+ document.getElementById("resumo").textContent=`${nome}, confira abaixo as questões que você acertou (verde) e errou (vermelho). Depois, gere o PDF e envie ao professor.`;
+ r.scrollIntoView({behavior:"smooth"});
+};
+function dados(){const nome=document.getElementById("nome").value.trim();const p=Math.round(acertos/total*100);return{nome,p}}
+function nomeArq(nome){return "Resultado-Logistica-4.0-"+nome.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9]+/g,"-").replace(/^-|-$/g,"")+".pdf"}
+function montarPDF(){
+ const {nome,p}=dados(),{jsPDF}=window.jspdf,doc=new jsPDF({unit:"mm",format:"a4"}),W=210,M=15,mw=W-2*M;
+ doc.setFillColor(7,26,58);doc.rect(0,0,W,32,"F");
+ doc.setFillColor(34,211,238);doc.rect(0,32,W,1.2,"F");
+ doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(22);doc.text("LOGÍSTICA 4.0",M,15);
+ doc.setFont("helvetica","normal");doc.setFontSize(10);doc.text("Curso Técnico em Logística - Resultado do questionário",M,24);
+ let y=43;doc.setTextColor(25);doc.setFont("helvetica","bold");doc.setFontSize(12);
+ doc.splitTextToSize("Aluno(a): "+nome,mw).forEach(l=>{doc.text(l,M,y);y+=6});
+ doc.setFont("helvetica","normal");doc.setFontSize(10);doc.text("Data: "+new Date().toLocaleString("pt-BR"),M,y);y+=8;
+ doc.setFillColor(231,244,247);doc.roundedRect(M,y-5,mw,13,2,2,"F");
+ doc.setFont("helvetica","bold");doc.setFontSize(13);doc.text(`Acertos: ${acertos} de ${total} (${p}%)   |   Erros: ${total-acertos}`,M+4,y+3.5);y+=17;
+ Q.forEach((q,i)=>{
+  const ok=resp[i]===q[3],cor=ok?[23,122,60]:[179,38,30];
+  const t1=doc.setFont("helvetica","bold")&&doc.setFontSize(10)&&doc.splitTextToSize(`${i+1}. ${q[1]}`,mw-6);
+  doc.setFont("helvetica","normal");
+  const t2=doc.splitTextToSize(`Sua resposta: ${L[resp[i]]}) ${q[2][resp[i]]}`,mw-6);
+  const t3=ok?[]:doc.splitTextToSize(`Resposta correta: ${L[q[3]]}) ${q[2][q[3]]}`,mw-6);
+  const h=(t1.length+t2.length+t3.length)*4.6+9;
+  if(y+h>282){doc.addPage();y=18}
+  doc.setFillColor(...cor);doc.rect(M,y-3.5,1.6,h-3,"F");
+  let x=M+5;doc.setTextColor(25);doc.setFont("helvetica","bold");doc.setFontSize(10);
+  t1.forEach(l=>{doc.text(l,x,y);y+=4.6});
+  doc.setFont("helvetica","normal");doc.setTextColor(...cor);
+  doc.text(ok?"ACERTOU":"ERROU",x,y);y+=4.6;
+  doc.setTextColor(60);t2.forEach(l=>{doc.text(l,x,y);y+=4.6});
+  if(t3.length){doc.setTextColor(23,122,60);t3.forEach(l=>{doc.text(l,x,y);y+=4.6})}
+  y+=4;
+ });
+ const n=doc.getNumberOfPages();
+ for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(120);doc.setFont("helvetica","normal");doc.text(`LOGÍSTICA 4.0 - ${nome} - Página ${i} de ${n}`,W/2,292,{align:"center"})}
+ return doc;
+}
+function msgWpp(){const {nome,p}=dados();return `*LOGÍSTICA 4.0 - Resultado do questionário*\nAluno(a): ${nome}\nAcertos: ${acertos} de ${total} (${p}%)`}
+function linkWpp(){return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msgWpp()+"\n(PDF em anexo)")}`}
+function mostrarDica(){const d=document.getElementById("dica");d.innerHTML=`O PDF foi salvo no seu aparelho. No WhatsApp do professor, toque no clipe (anexar), escolha <b>Documento</b> e selecione o arquivo salvo. <a href="${linkWpp()}" target="_blank" rel="noopener">Abrir conversa com o professor</a>`;d.classList.remove("hide")}
+document.getElementById("btnPdf").onclick=()=>{const {nome}=dados();montarPDF().save(nomeArq(nome))};
+document.getElementById("btnWpp").onclick=async()=>{
+ if(!window.jspdf){alert("Não foi possível carregar o gerador de PDF. Verifique a conexão com a internet e tente novamente.");return}
+ const {nome}=dados(),doc=montarPDF(),arq=nomeArq(nome);
+ const file=new File([doc.output("blob")],arq,{type:"application/pdf"});
+ if(navigator.canShare&&navigator.canShare({files:[file]})){
+  try{await navigator.share({files:[file],title:"LOGÍSTICA 4.0 - Resultado",text:msgWpp()});return}
+  catch(e){if(e.name==="AbortError")return}
+ }
+ doc.save(arq);mostrarDica();window.open(linkWpp(),"_blank","noopener");
+};
+document.getElementById("btnRefazer").onclick=()=>location.reload();
+</script>
+</body>
+</html>
